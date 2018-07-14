@@ -59,21 +59,18 @@ describe("NPM dependencies", function() {
     });
   });
 
-  it.skip("will do a dry run migration", function(done) {
-    // this should work but I think something gets mutated in this test
-    // causing the later non-dry-run migration test to fail
+  it("will do a dry run migration", function(done) {
     this.timeout(50000);
 
     CommandRunner.run("migrate --dry-run", config, function(err) {
       var output = logger.contents();
-      console.log(output)
       processErr(err, output);
 
       const buildDir = config.contracts_build_directory;
 
-      const contractArtifact = require(path.join(buildDir, "Contract.json"));
-      const migrationArtifact = require(path.join(buildDir, "Migrations.json"))
-      const extraLibArtifact = require(path.join(
+      const contractArtifact = JSON.parse(fs.readFileSync(path.join(buildDir, "Contract.json")))
+      const migrationArtifact = JSON.parse(fs.readFileSync(path.join(buildDir, "Migrations.json")))
+      const extraLibArtifact = JSON.parse(fs.readFileSync(path.join(
         config.working_directory,
         "node_modules",
         "@org",
@@ -81,7 +78,7 @@ describe("NPM dependencies", function() {
         "build",
         "contracts",
         "ExtraLibrary.json"
-      ));
+      )))
 
       const Contract = contract(contractArtifact);
       const Migrations = contract(migrationArtifact);
@@ -127,9 +124,9 @@ describe("NPM dependencies", function() {
 
       const buildDir = config.contracts_build_directory;
 
-      const contract3Artifact = require(path.join(buildDir, "Contract3.json"));
-      const migrationArtifact = require(path.join(buildDir, "Migrations.json"))
-      const extraLibArtifact = require(path.join(
+      const contract3Artifact = JSON.parse(fs.readFileSync(path.join(buildDir, "Contract3.json")))
+      const migrationArtifact = JSON.parse(fs.readFileSync(path.join(buildDir, "Migrations.json")))
+      const extraLibArtifact = JSON.parse(fs.readFileSync(path.join(
         config.working_directory,
         "node_modules",
         "@org",
@@ -137,7 +134,7 @@ describe("NPM dependencies", function() {
         "build",
         "contracts",
         "ExtraLibrary.json"
-      ));
+      )))
 
       const Contract3 = contract(contract3Artifact);
       const Migrations = contract(migrationArtifact);
